@@ -2,6 +2,7 @@ using Microsoft.Data.Sqlite;
 using TiendaElectronica.Models;
 
 namespace TiendaElectronica.Repositorios;
+
 public class PresupuestoRepository
 {
     string stringConnection = "Data Source=Tienda.db;Cache=Shared";
@@ -56,17 +57,22 @@ public class PresupuestoRepository
         Presupuesto presupuesto = null;
 
         using var connection = GetConnection();
-        string queryString = "SELECT IdProducto, NombreDestinatario, FechaCreacion FROM Presupuestos WHERE IdPresupuesto = @id";
+        string queryString = "SELECT  pre.IdPresupuesto AS IdPresupuesto, pre.NombreDestinatario AS NombreDestinatario, pre.FechaCreacion AS FechaCreacion, d.Cantidad AS Cantidad, pro.IdProducto AS IdProducto, pro.Descripcion AS Descripcion, pro.Precio AS Precio FROM PresupuestosDetalle d JOIN Presupuestos pre ON d.IdPresupuesto = pre.IdPresupuesto JOIN Productos pro ON d.IdProducto = pro.IdProducto WHERE pre.IdPresupuesto = @id";
         var command = new SqliteCommand(queryString, connection);
 
         command.Parameters.Add(new SqliteParameter("@id", id));
-
         using (var reader = command.ExecuteReader())
         {
-            if (reader.Read())
+            while (reader.Read())
             {
-                var presupuestoTemporal = new Presupuesto(id, reader["NombreDestinatario"].ToString(), Convert.ToDateTime(reader["FechaCreacion"]));
-                presupuesto = presupuestoTemporal;
+                if (presupuesto == null)
+                {
+                    var fecha = DateOnly.Parse(reader["FechaCreacion"].ToString());
+                    var presupuestoTemporal = new Presupuesto(id, reader["NombreDestinatario"].ToString(), fecha); //creo un nuevo presupuesto
+                    presupuesto = presupuestoTemporal;
+                }
+                Producto producto = new Producto(Convert.ToInt32(reader["IdProducto"]), reader["Descripcion"].ToString(), Convert.ToInt32(reader["Precio"]));
+                presupuesto.agregarDetalles(producto, Convert.ToInt32(reader["Cantidad"]));
             }
         }
         connection.Close();
@@ -97,7 +103,8 @@ public class PresupuestoRepository
                 }
                 else
                 {
-                    var presupuesto = new Presupuesto(id, reader["NombreDestinatario"].ToString(), Convert.ToDateTime(reader["FechaCreacion"])); //creo un nuevo presupuesto
+                    var fecha = DateOnly.Parse(reader["FechaCreacion"].ToString());
+                    var presupuesto = new Presupuesto(id, reader["NombreDestinatario"].ToString(), fecha); //creo un nuevo presupuesto
                     presupuesto.agregarDetalles(producto, Convert.ToInt32(reader["Cantidad"])); //agrego el detalle al listado
                     listadoPresupuestos.Add(presupuesto); //agrego el nuevo presupuesto al listado
                 }

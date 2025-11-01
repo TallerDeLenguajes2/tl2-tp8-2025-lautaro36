@@ -5,12 +5,12 @@ using TiendaElectronica.Models;
 using TiendaElectronica.ViewModels;
 
 namespace TiendaElectronica.Controllers;
-
-public class ProductoController : Controller
+    
+public class ProductosController : Controller
 {
-    private readonly ILogger<ProductoController> _logger;
+    private readonly ILogger<ProductosController> _logger;
     private ProductoRepository _productoRepository; 
-    public ProductoController(ILogger<ProductoController> logger)
+    public ProductosController(ILogger<ProductosController> logger)
     {
         _logger = logger;
         _productoRepository = new ProductoRepository(); 
@@ -19,12 +19,7 @@ public class ProductoController : Controller
     public IActionResult Index()
     {
         List<Producto> listadoModels = _productoRepository.GetAll();
-        List<ProductoIndexViewModel> listadoViewModels = listadoModels.Select(p => new ProductoIndexViewModel
-        {
-            Id = p.IdProducto,
-            Precio = p.Precio,
-            Descripcion = p.Descripcion
-        }).ToList();
+        List<ProductoIndexViewModel> listadoViewModels = listadoModels.Select(producto => new ProductoIndexViewModel(producto)).ToList();
         return View(listadoViewModels);
     }
 
@@ -36,13 +31,13 @@ public class ProductoController : Controller
 //         return Created("producto dado de alta correctamente.", producto);
 //     }
 
-//     [HttpPut("{id}")]
-//     public IActionResult ModificarProducto([FromBody]Producto producto, int id)
-//     {
-//         var updateCorrecto = _productoRepository.ModificarProducto(id, producto);
-//         if (!updateCorrecto) return NotFound($"No se encontró un producto con el ID {id}.");
-//         return Ok();
-//     }
+    // [HttpPut("{id}")]
+    // public IActionResult Modificar([FromBody]Producto producto, int id)
+    // {
+    //     var updateCorrecto = _productoRepository.ModificarProducto(id, producto);
+    //     if (!updateCorrecto) return NotFound($"No se encontró un producto con el ID {id}.");
+    //     return Ok();
+    // }
 
 //     [HttpGet("{id}")] // antes lo tenia como [HttpGet("id")] pero devolvia este url https://localhost:7235/Producto/id?id=4
 //     public IActionResult GetDetallesById(int id)

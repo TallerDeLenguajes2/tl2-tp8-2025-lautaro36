@@ -4,10 +4,10 @@ public class Presupuesto
 {
     public int IdPresupuesto { get; set; }
     public string NombreDestinatario { get; set; }
-    public DateTime FechaCreacion { get; set; }
+    public DateOnly FechaCreacion { get; set; }
     public List<PresupuestoDetalle> ListadoDetalles { get; set; } = new List<PresupuestoDetalle>();
 
-    public Presupuesto(int id, string nombre, DateTime fecha)
+    public Presupuesto(int id, string nombre, DateOnly fecha)
     {
         IdPresupuesto = id;
         NombreDestinatario = nombre;

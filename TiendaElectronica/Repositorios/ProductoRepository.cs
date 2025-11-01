@@ -3,15 +3,15 @@ using TiendaElectronica.Models;
 
 namespace TiendaElectronica.Repositorios;
 
-public interface IProductoRepository
-{
-    SqliteConnection GetOpenConnection();
-    int CrearProducto(Producto producto);
-    bool ModificarProducto(int id, Producto producto);
-    List<Producto> GetAll();
-    Producto GetDetallesByID(int id);
-    int DeleteByID(int id);
-}
+// public interface IProductoRepository
+// {
+//     SqliteConnection GetOpenConnection();
+//     int CrearProducto(Producto producto);
+//     bool ModificarProducto(int id, Producto producto);
+//     List<Producto> GetAll();
+//     Producto GetDetallesByID(int id);
+//     int DeleteByID(int id);
+// }
 public class ProductoRepository
 {
     string stringConnection = "Data Source=Tienda.db;Cache=Shared";
