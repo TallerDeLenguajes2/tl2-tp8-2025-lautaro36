@@ -23,13 +23,19 @@ public class ProductosController : Controller
         return View(listadoViewModels);
     }
 
-//     [HttpPost("AltaProducto")]
-//     public IActionResult CrearProducto([FromBody] Producto producto)
-//     {
-//         int resultado = _productoRepository.CrearProducto(producto);
-//         if (resultado == 0) return Conflict("Problemas al dar de alta el producto.");
-//         return Created("producto dado de alta correctamente.", producto);
-//     }
+    [HttpGet]
+    public IActionResult Create()
+    {
+        return View(new Producto());
+    }
+    [HttpPost]
+    public IActionResult Create(Producto producto)
+    {
+        int resultado = _productoRepository.CrearProducto(producto);
+        if (resultado == 0) return RedirectToAction("Error", "Home");
+
+        return RedirectToAction("Index", "Productos");
+    }
 
     // [HttpPut("{id}")]
     // public IActionResult Modificar([FromBody]Producto producto, int id)

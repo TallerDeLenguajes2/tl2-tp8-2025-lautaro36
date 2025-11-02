@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TiendaElectronica.Repositorios;
 using TiendaElectronica.ViewModels;
+using TiendaElectronica.Models;
 
 namespace TiendaElectronica.Controllers;
 
@@ -25,14 +26,15 @@ public class PresupuestosController : Controller
     public IActionResult Details(int id)
     {
         var presupuestoModel = _presupuestoRepository.GetDetallesById(id);
-        if (presupuestoModel == null) return View("Error"); // Muestra "error" sin salir de la pagina details.cshtml. Renderiza Views/Shared/Error.cshtml directamente 
-        // sino return RedirectToAction("Error", "Home") Redirige a la página de error global. Va al método Error() del HomeController
+        if (presupuestoModel == null) return RedirectToAction("Error", "Home"); 
+        // View("Error") Muestra "error" sin salir de la pagina details.cshtml. Renderiza Views/Shared/Error.cshtml directamente. De esta forma, arroja NullReferenceException en Error.cshtml. AVERIGUAR COMO RESOLVERLO
+        // return RedirectToAction("Error", "Home") Redirige a la página de error global. Va al método Error() del HomeController. muestra la vista Error.cshtml correctamente
         var presupuestoViewModel = new PresupuestoIndexViewModels(presupuestoModel);
         
         return View(presupuestoViewModel);
     }
     // [HttpPost("AltaPresupuesto")]
-    // public IActionResult CrearPresupuesto(Presupuesto presupuesto)
+    // public IActionResult Create(Presupuesto presupuesto)
     // {
     //     _presupuestoRepository.CrearPresupuesto(presupuesto);
     //     return Created("Presupuesto dado de alta correctamente", presupuesto);
