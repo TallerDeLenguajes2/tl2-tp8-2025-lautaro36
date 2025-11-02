@@ -8,7 +8,14 @@ public class ProductoIndexViewModel //usando ViewModels en lugar de usar directa
     public string? Descripcion { get; set; }
     public int Precio { get; set; }
 
-    public ProductoIndexViewModel(){}
+    public ProductoIndexViewModel() { }
+
+    public ProductoIndexViewModel(int id, string descripcion, int precio)
+    {
+        IdProducto = id;
+        Descripcion = descripcion;
+        Precio = precio;
+    }
 
     public ProductoIndexViewModel(Producto producto)
     {
