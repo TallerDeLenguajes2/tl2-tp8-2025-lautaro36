@@ -61,11 +61,14 @@
                                                 class="btn btn-sm btn-outline-warning me-2">
                                                 Modificar
                                             </a>
-                                            <a asp-controller="Productos" asp-action="Eliminar"
-                                                asp-route-IdProducto="@producto.IdProducto"
+                                            @* antes esto estaba como un enlace igual al de Modificar, pero lo correcto es usar un formulario POST en la vista, lo que garantiza que la solicitud llegue como POST, y no como GET al controller *@
+                                            <form asp-controller="Productos" asp-action="Delete"
+                                                asp-route-IdProducto="@producto.IdProducto" method="post" class="d-inline"
                                                 class="btn btn-sm btn-outline-danger">
-                                                Eliminar
-                                            </a>
+                                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar Producto">
+                                                    <i class="bi bi-trash"></i> Eliminar
+                                                </button>
+                                            </form>
                                         </td>
                                     </tr>
                                 }

@@ -54,14 +54,18 @@ public class ProductosController : Controller
         return RedirectToAction("Index", "Productos");
     }
 
-    // [HttpDelete("Update/{id}")]
-    // public IActionResult BorrarProducto(int id)
-    // {
-    //     var borradoCorrecto = _productoRepository.DeleteByID(id);
-    //     if (borradoCorrecto == -1) return Conflict("El producto ya fue agregado a uno o mas presupuestos, asegurese de borrar primero el/los presupuestos.");
-    //     else if (borradoCorrecto == 0) return NotFound($"No se encontró un producto con el ID {id}.");
-    //     return NoContent();
-    // }
+    // [HttpDelete("Delete/{IdProducto}")] el navegador unicamente puede enviar solicitudes GET y POST, por eso no funciono. 
+    // /El framework ignoró  esta acción, porque la solicitud que llegó desde el navegador era un GET, no un DELETE. El atributo [HttpDelete] solo responde a solicitudes DELETE.
+    //luego no especifique un metodo HTTP, entonces  el framework asumio el metodo predeterminda, GET
+    //Aunque usar el método GET soluciono,  las operaciones que cambian el estado del servidor (como eliminar un registro) nunca deben usar GET.
+    [HttpPost("Delete/{IdProducto}")]//por eso, uso post
+    public IActionResult Delete(int IdProducto)
+    {
+        var borradoCorrecto = _productoRepository.DeleteByID(IdProducto);
+        if (borradoCorrecto == -1) return RedirectToAction("Error", "Home");
+        else if (borradoCorrecto == 0) return RedirectToAction("Error", "Home");
+        return RedirectToAction("Index", "Productos");
+    }
     
     //result()
 
