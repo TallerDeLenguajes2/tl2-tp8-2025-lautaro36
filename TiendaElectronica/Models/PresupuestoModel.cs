@@ -3,10 +3,11 @@ namespace TiendaElectronica.Models;
 public class Presupuesto
 {
     public int IdPresupuesto { get; set; }
-    public string NombreDestinatario { get; set; }
+    public string? NombreDestinatario { get; set; }
     public DateOnly FechaCreacion { get; set; }
     public List<PresupuestoDetalle> ListadoDetalles { get; set; } = new List<PresupuestoDetalle>();
 
+    public Presupuesto(){}
     public Presupuesto(int id, string nombre, DateOnly fecha)
     {
         IdPresupuesto = id;

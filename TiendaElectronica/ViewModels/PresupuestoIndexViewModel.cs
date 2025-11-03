@@ -5,13 +5,16 @@ namespace TiendaElectronica.ViewModels;
 public class PresupuestoIndexViewModels
 {
     public int IdPresupuesto { get; set; }
-    public string NombreDestinatario { get; set; }
+    public string? NombreDestinatario { get; set; }
     public DateOnly FechaCreacion { get; set; }
     public List<DetalleIndexViewModel> ListadoDetalles { get; set; } = new List<DetalleIndexViewModel>();
     public int MontoPresupuesto { get; set; }
     public double MontoPresupuestoConIva { get; set; }
     public int CantidadProductos { get; set; }
 
+    public PresupuestoIndexViewModels()
+    {  
+    }
     public PresupuestoIndexViewModels(Presupuesto presupuesto)
     {
         IdPresupuesto = presupuesto.IdPresupuesto;

@@ -28,6 +28,7 @@ public class ProductosController : Controller
     {
         return View(new Producto());
     }
+    
     [HttpPost]
     public IActionResult Create(Producto producto)
     {
@@ -37,18 +38,19 @@ public class ProductosController : Controller
         return RedirectToAction("Index", "Productos");
     }
 
-    [HttpGet("Update/{IdProducto}")]
+    [HttpGet("Update/{IdProducto}")] 
     public IActionResult Update(int IdProducto, [FromQuery]string Descripcion, [FromQuery]int Precio)
     {
         ProductoIndexViewModel ViewModel = new ProductoIndexViewModel(IdProducto, Descripcion, Precio);
         return View(ViewModel);
     }
 
-    [HttpPost("Update/{IdProducto}")]
-    public IActionResult Update(ProductoIndexViewModel productoViewModel, int IdProducto)
+    [HttpPost("Update/{IdProducto}")] // [HttpPost("Update")]esto no funciona, porque a pesar de que supuestamente, el id del producto deberia llegar de ProductoIndexViewModel, (ya q fue cargado en el httpget), asp net core tiene q rearmar el objeto mediante su model binder. 
+    //como tiene q rearmar el objeto, necesita el id, entonces este tiene q llegar ya sea desde la ruta o desde un campo hidden del form
+    public IActionResult Update(ProductoIndexViewModel productoViewModel)
     {
         Producto productoModel = new Producto(productoViewModel.IdProducto, productoViewModel.Descripcion, productoViewModel.Precio);
-        var updateCorrecto = _productoRepository.ModificarProducto(IdProducto, productoModel);
+        var updateCorrecto = _productoRepository.ModificarProducto(productoModel);
         if (!updateCorrecto) return RedirectToAction("Error", "Home");
 
         return RedirectToAction("Index", "Productos");
@@ -66,16 +68,4 @@ public class ProductosController : Controller
         else if (borradoCorrecto == 0) return RedirectToAction("Error", "Home");
         return RedirectToAction("Index", "Productos");
     }
-    
-    //result()
-
-//     [HttpGet("{id}")] // antes lo tenia como [HttpGet("id")] pero devolvia este url https://localhost:7235/Producto/id?id=4
-//     public IActionResult GetDetallesById(int id)
-//     {
-//         var producto = _productoRepository.GetDetallesByID(id);
-//         if(producto == null) return NotFound($"No se encontró un producto con el ID {id}.");    
-//         return Ok(producto);    
-//     }
-
-
 }

@@ -36,7 +36,7 @@ public class ProductoRepository
             return resultado;
         }
     }
-    public bool ModificarProducto(int id, Producto producto)
+    public bool ModificarProducto(Producto producto)
     {
         using (var connection = GetOpenConnection())
         {
@@ -45,7 +45,7 @@ public class ProductoRepository
 
             command.Parameters.Add(new SqliteParameter("@descripcion", producto.Descripcion));
             command.Parameters.Add(new SqliteParameter("@precio", producto.Precio));
-            command.Parameters.Add(new SqliteParameter("@id", id));
+            command.Parameters.Add(new SqliteParameter("@id", producto.IdProducto));
 
             var filasAfectadas = command.ExecuteNonQuery();
             connection.Close();
