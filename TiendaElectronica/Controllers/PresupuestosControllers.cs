@@ -63,14 +63,22 @@ public class PresupuestosController : Controller
         return View(model);
     }
 
-    [HttpPost("Presupuestos/Update/{IdPresupuesto}")]// [HttpPost("Update")]esto no funciona, porque a pesar de que supuestamente, el id del producto deberia llegar de ProductoIndexViewModel, (ya q fue cargado en el httpget), asp net core tiene q rearmar el objeto mediante su model binder. como tiene q rearmar el objeto, necesita el id, entonces este tiene q llegar ya sea desde la ruta o desde un campo hidden del form
+// [HttpPost("Update")]esto no funciona, porque a pesar de que supuestamente, el id del producto deberia llegar de ProductoIndexViewModel, (ya q fue cargado en el httpget), asp net core tiene q rearmar el objeto mediante su model binder. como tiene q rearmar el objeto, necesita el id, entonces este tiene q llegar ya sea desde la ruta o desde un campo hidden del form
+    [HttpPost("Presupuestos/Update/{IdPresupuesto}")]
     public IActionResult Update(Presupuesto presupuesto)
     {
         _presupuestoRepository.ModificarPresupuesto(presupuesto);
         return RedirectToAction("Index", "Presupuestos");
     }
 
-
+    [HttpPost("Presupuestos/Delete/{IdPresupuesto}")]
+    public IActionResult Delete(int IdPresupuesto)
+    {
+        int filasAfectadas = _presupuestoRepository.DeleteById(IdPresupuesto);
+        if (filasAfectadas == -1) return RedirectToAction("Error", "Home");
+        if (filasAfectadas == 0) return RedirectToAction("Error", "Home");
+        return RedirectToAction("Index", "Presupuestos");
+    }
     // [HttpPost("ProductoDetalle")]
     // public IActionResult AgregarAlPresupuesto(int id, int idProducto, int cantidadProducto)
     // {
@@ -78,17 +86,6 @@ public class PresupuestosController : Controller
     //     if (resultado == -1) return Conflict("El ID del producto o presupuesto no existe, no puedo agregarse al presupuesto");
     //     else if (resultado == 0) return Conflict("No pudo agregarse al presupuesto");
     //     return Created();
-    // }
-
-
-
-    // [HttpDelete("{id}")]
-    // public IActionResult DeleteById(int id)
-    // {
-    //     int filasAfectadas = _presupuestoRepository.DeleteById(id);
-    //     if (filasAfectadas == -1) return Conflict("El producto ya fue agregado a uno o mas presupuestos, asegurese de borrar primero el/los presupuestos.");
-    //     if (filasAfectadas == 0) return NotFound($"No se encontró un producto con el ID {id}.");
-    //     return NoContent();
     // }
 
 }

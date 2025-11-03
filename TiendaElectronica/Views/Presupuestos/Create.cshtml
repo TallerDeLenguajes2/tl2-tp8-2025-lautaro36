@@ -53,7 +53,7 @@
 
                             <!-- Grupo para la selección del producto -->
                             <div class="mb-3">
-                                <label asp-for="IdProducto"></label>
+                                <label asp-for="IdProducto">Producto</label>
                                 <select asp-for="IdProducto"
                                     asp-items="@(new SelectList(Model.ListadoProductos, "IdProducto", "Descripcion"))"
                                     class="form-control"> @* asp-items="@(new SelectList(...))" genera los <option> automáticamente, usando value=Id, text=Descripcion *@                                    
