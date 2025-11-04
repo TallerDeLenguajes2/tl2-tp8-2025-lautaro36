@@ -1,4 +1,4 @@
-@model TiendaElectronica.ViewModels.PresupuestoCreateViewModels
+@model TiendaElectronica.ViewModels.DetalleCreateViewModel
 @{
     ViewData["Title"] = "Crear un presupuesto";
 }
@@ -20,8 +20,8 @@
     <div class="container py-5">
 
         <header class="text-center mb-5">
-            <h1 class="fw-bold text-primary">Nuevo Presupuesto</h1>
-            <p class="text-muted fs-5 mb-0">Crear un nuevo presupuesto</p>
+            <h1 class="fw-bold text-primary">Nuevo Detalle</h1>
+            <p class="text-muted fs-5 mb-0">Agregue un producto al presupuesto</p>
         </header>
 
         <main>
@@ -34,27 +34,12 @@
 
                     <!-- Adaptación para formulario: utiliza p-4 para padding dentro del body -->
                     <div class="card-body p-4">
-                        <form asp-controller="Presupuestos" asp-action="Create" method="post">
-
-                            <div class="mb-3">
-                                <label asp-for="@Model.NombreDestinatario"
-                                    class="form-label fw-semibold">Destinatario</label>
-                                <input asp-for="@Model.NombreDestinatario" class="form-control"
-                                    placeholder="Nombre de la empresa o cliente" />
-                                <span asp-validation-for="@Model.NombreDestinatario" class="text-danger"></span>
-                            </div>
-
-                            <div class="mb-3">
-                                <label asp-for="@Model.FechaCreacion" class="form-label fw-semibold">Fecha de
-                                    Creación</label>
-                                <input asp-for="@Model.FechaCreacion" class="form-control" type="date" />
-                                <span asp-validation-for="@Model.FechaCreacion" class="text-danger"></span>
-                            </div>
+                        <form asp-controller="Presupuestos" asp-action="CreateDetalle" method="post">
 
                             <!-- Grupo para la selección del producto -->
                             <div class="mb-3">
-                                <label asp-for="IdProducto">Producto</label>
-                                <select asp-for="IdProducto"
+                                <label for="IdProducto">Producto</label>
+                                <select name="IdProducto"
                                     asp-items="@(new SelectList(Model.ListadoProductos, "IdProducto", "Descripcion"))"
                                     class="form-control"> @* asp-items="@(new SelectList(...))" genera los <option> automáticamente, usando value=Id, text=Descripcion *@                                    
                                     <option value="">-- Seleccioná un producto --</option>
@@ -62,14 +47,16 @@
                             </div>
 
                             <div class="mb-3">
-                                <label asp-for="@Model.Cantidad" class="form-label fw-semibold">Cantidad</label>
-                                <input asp-for="@Model.Cantidad" class="form-control" type="number" step="1" min="1"
+                                <label for="Cantidad" class="form-label fw-semibold">Cantidad</label>
+                                <input name="Cantidad" class="form-control" type="number" step="1" min="1"
                                     placeholder="Ej: 1" />
-                                <span asp-validation-for="@Model.Cantidad" class="text-danger"></span>
+                                <span for="Cantidad" class="text-danger"></span>
                             </div>
 
+                            <input type="hidden" value="@Model.IdPresupuesto" name="IdPresupuesto">
+
                             <button type="submit" class="btn btn-primary mt-3 w-100">
-                                <i class="bi bi-save me-2"></i> Crear Presupuesto
+                                <i class="bi bi-save me-2"></i> Agregar presupuesto
                             </button>
 
                             <a asp-controller="Presupuestos" asp-action="Index"

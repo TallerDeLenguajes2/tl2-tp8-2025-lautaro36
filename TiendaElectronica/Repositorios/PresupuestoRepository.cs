@@ -182,7 +182,7 @@ public class PresupuestoRepository
 
     public bool UpdateCantidades(DetalleUpCantidadesViewModel detalle)
     {
-        using(var connection = GetConnection())
+        using (var connection = GetConnection())
         {
             string stringQuery = "UPDATE PresupuestosDetalle SET Cantidad = @cantidad WHERE IdProducto = @idProducto AND IdPresupuesto = @idPresupuesto";
 
@@ -193,6 +193,23 @@ public class PresupuestoRepository
             command.Parameters.Add(new SqliteParameter("@idProducto", detalle.IdProducto));
 
             var filasAfectadas = command.ExecuteNonQuery();
+            connection.Close();
+            return filasAfectadas >= 1;
+        }
+    }
+
+    public bool DeleteDetalle(int IdPresupuesto, int IdProducto)
+    {
+        using (var connection = GetConnection())
+        {
+            string stringQuery = "DELETE FROM PresupuestosDetalle WHERE IdPresupuesto = @idPresupuesto AND IdProducto = @idProducto";
+            var command = new SqliteCommand(stringQuery, connection);
+
+            command.Parameters.Add(new SqliteParameter("@idPresupuesto", IdPresupuesto));
+            command.Parameters.Add(new SqliteParameter("@idProducto", IdProducto));
+
+            int filasAfectadas = command.ExecuteNonQuery();
+
             connection.Close();
             return filasAfectadas >= 1;
         }

@@ -99,13 +99,29 @@ public class PresupuestosController : Controller
         return Redirect($"Details/{detalleViewModel.IdPresupuesto}"); //segun chatgpt esto no es seguro, pero no encontre otra forma de hacer q funcione sin tener q modificar el metodo details
     }
 
-    // [HttpPost("ProductoDetalle")]
-    // public IActionResult AgregarAlPresupuesto(int id, int idProducto, int cantidadProducto)
-    // {
-    //     var resultado = _presupuestoRepository.AgregarAlPresupuesto(id, idProducto, cantidadProducto);
-    //     if (resultado == -1) return Conflict("El ID del producto o presupuesto no existe, no puedo agregarse al presupuesto");
-    //     else if (resultado == 0) return Conflict("No pudo agregarse al presupuesto");
-    //     return Created();
-    // }
+    [HttpPost]
+    public IActionResult DeleteDetalle(int IdPresupuesto, int IdProducto)
+    {
+        bool resultado = _presupuestoRepository.DeleteDetalle(IdPresupuesto, IdProducto);
+        if (!resultado) return RedirectToAction("Error", "Home");
+        return Redirect($"Details/{IdPresupuesto}");
+    }
+
+    [HttpGet("CreateDetalle/{IdPresupuesto}")]
+    public IActionResult CreateDetalle(int IdPresupuesto)
+    {
+        ProductoRepository productosRepository = new ProductoRepository();
+        List<Producto> listadoModels = productosRepository.GetAll();
+        return View(new DetalleCreateViewModel(IdPresupuesto, listadoModels));
+    }
+
+    [HttpPost("CreateDetalle/{IdPresupuesto}")]
+    public IActionResult CreateDetalle(int IdPresupuesto, int IdProducto, int Cantidad)
+    {
+        var resultado = _presupuestoRepository.AgregarAlPresupuesto(IdPresupuesto, IdProducto, Cantidad);
+        if (resultado == -1) return RedirectToAction("Error", "Home");
+        else if (resultado == 0) return RedirectToAction("Error", "Home");
+        return Redirect($"Details/{IdPresupuesto}");
+    }
 
 }
