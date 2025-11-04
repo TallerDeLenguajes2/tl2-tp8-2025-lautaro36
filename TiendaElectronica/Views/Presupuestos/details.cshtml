@@ -62,6 +62,7 @@
                                     <th>ID del producto</th>
                                     <th>Precio</th>
                                     <th>Cantidad</th>
+                                    <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -72,6 +73,24 @@
                                         <td>@detalle.Producto.IdProducto</td>
                                         <td>$@detalle.GetPrecio()</td>
                                         <td>@detalle.Cantidad</td>
+                                        <td>
+                                            <a asp-controller="Presupuestos" asp-action="UpdateCantidades"
+                                                asp-route-IdPresupuesto="@Model.IdPresupuesto"
+                                                asp-route-IdProducto="@detalle.Producto.IdProducto"
+                                                asp-route-Descripcion="@detalle.Producto.Descripcion"
+                                                asp-route-Cantidad="@detalle.Cantidad"
+                                                class="btn btn-sm btn-outline-warning me-2" title="Modificar Presupuesto">
+                                                <i class="bi bi-pencil-square"></i> Modificar
+                                            </a>
+
+                                            <form asp-controller="Presupuestos" asp-action="Delete"
+                                                asp-route-IdPresupuesto="@Model.IdPresupuesto" method="post" class="d-inline">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                    title="Eliminar Presupuesto">
+                                                    <i class="bi bi-trash"></i> Eliminar
+                                                </button>
+                                            </form>
+                                        </td>
                                     </tr>
                                 }
                             </tbody>

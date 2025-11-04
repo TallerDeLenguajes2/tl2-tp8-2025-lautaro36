@@ -1,5 +1,6 @@
 using Microsoft.Data.Sqlite;
 using TiendaElectronica.Models;
+using TiendaElectronica.ViewModels;
 
 namespace TiendaElectronica.Repositorios;
 
@@ -172,6 +173,24 @@ public class PresupuestoRepository
             command.Parameters.Add(new SqliteParameter("@nombre", presupuesto.NombreDestinatario));
             command.Parameters.Add(new SqliteParameter("@fecha", presupuesto.FechaCreacion));
             command.Parameters.Add(new SqliteParameter("@id", presupuesto.IdPresupuesto));
+
+            var filasAfectadas = command.ExecuteNonQuery();
+            connection.Close();
+            return filasAfectadas >= 1;
+        }
+    }
+
+    public bool UpdateCantidades(DetalleUpCantidadesViewModel detalle)
+    {
+        using(var connection = GetConnection())
+        {
+            string stringQuery = "UPDATE PresupuestosDetalle SET Cantidad = @cantidad WHERE IdProducto = @idProducto AND IdPresupuesto = @idPresupuesto";
+
+            var command = new SqliteCommand(stringQuery, connection);
+
+            command.Parameters.Add(new SqliteParameter("@cantidad", detalle.Cantidad));
+            command.Parameters.Add(new SqliteParameter("@idPresupuesto", detalle.IdPresupuesto));
+            command.Parameters.Add(new SqliteParameter("@idProducto", detalle.IdProducto));
 
             var filasAfectadas = command.ExecuteNonQuery();
             connection.Close();

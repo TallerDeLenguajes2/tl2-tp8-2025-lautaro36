@@ -57,22 +57,17 @@
                                         <td>$@p.MontoPresupuestoConIva</td>
                                         <td>@p.CantidadProductos</td>
                                         
-                                        <!-- Acciones consolidadas en una sola celda -->
                                         <td>
-                                            <!-- Botón Detalles -->
                                             <a asp-controller="Presupuestos" asp-action="Details" asp-route-id="@p.IdPresupuesto"
                                                class="btn btn-sm btn-outline-info me-2" title="Ver Detalles">
                                                 <i class="bi bi-eye"></i> Detalles
                                             </a>
-
-                                            <!-- Botón Modificar -->
                                             <a asp-controller="Presupuestos" asp-action="Update" asp-route-IdPresupuesto="@p.IdPresupuesto"
                                                asp-route-NombreDestinatario="@p.NombreDestinatario" asp-route-FechaCreacion="@p.FechaCreacion"
                                                class="btn btn-sm btn-outline-warning me-2" title="Modificar Presupuesto">
                                                 <i class="bi bi-pencil-square"></i> Modificar
                                             </a>
                                             
-                                            <!-- Formulario Eliminar (POST para seguridad) -->
                                             <form asp-controller="Presupuestos" asp-action="Delete"
                                                   asp-route-IdPresupuesto="@p.IdPresupuesto" method="post" class="d-inline">
                                                 <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar Presupuesto">
