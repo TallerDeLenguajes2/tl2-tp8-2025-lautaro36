@@ -26,11 +26,11 @@ public class ProductosController : Controller
     [HttpGet]
     public IActionResult Create()
     {
-        return View(new ProductoViewModel());
+        return View(new ProductoCreateViewModel());
     }
     
     [HttpPost]
-    public IActionResult Create(ProductoViewModel viewModel)
+    public IActionResult Create(ProductoCreateViewModel viewModel)
     {
         Producto model = new Producto(viewModel);
         int resultado = _productoRepository.CrearProducto(model);

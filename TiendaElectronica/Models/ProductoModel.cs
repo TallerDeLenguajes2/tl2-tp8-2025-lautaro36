@@ -17,9 +17,14 @@ public class Producto
         Precio = precio;
     }
 
-    public Producto(ProductoViewModel viewModel) //preguntar si es correcto tener un mapeador en el modelo (tp9)
+    public Producto(ProductoViewModel viewModel) //preguntar si es correcto tener un mapeador en el modelo (tp9). si es pero en proyectos grandes se usan mappers para verdadero aislamiento
     {
         IdProducto = viewModel.IdProducto;
+        Descripcion = viewModel.Descripcion;
+        Precio = viewModel.Precio;
+    }
+    public Producto(ProductoCreateViewModel viewModel) //constructor para create
+    {
         Descripcion = viewModel.Descripcion;
         Precio = viewModel.Precio;
     }
