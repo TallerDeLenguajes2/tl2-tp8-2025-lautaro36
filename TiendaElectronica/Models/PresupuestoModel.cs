@@ -1,3 +1,5 @@
+using TiendaElectronica.ViewModels;
+
 namespace TiendaElectronica.Models;
 
 public class Presupuesto
@@ -13,6 +15,13 @@ public class Presupuesto
         IdPresupuesto = id;
         NombreDestinatario = nombre;
         FechaCreacion = fecha;
+    }
+
+    public Presupuesto(PresupuestoViewModel viewModel) //en un sistema con verdadero aislamiento  se usa un clase mapper, que solo mapea de un modelo a las viewmodels y viceversa
+    {
+        IdPresupuesto = viewModel.IdPresupuesto;
+        NombreDestinatario = viewModel.NombreDestinatario;
+        FechaCreacion = viewModel.FechaCreacion;
     }
 
     public void agregarDetalles(Producto producto, int cantidad)

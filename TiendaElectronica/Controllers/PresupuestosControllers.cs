@@ -59,17 +59,18 @@ public class PresupuestosController : Controller
     [HttpGet("Presupuestos/Update/{IdPresupuesto}")]
     public IActionResult Update(int IdPresupuesto, [FromQuery] string NombreDestinatario, [FromQuery] DateOnly FechaCreacion)
     {
-        Presupuesto model = new Presupuesto(IdPresupuesto, NombreDestinatario, FechaCreacion);
-        return View(model);
+        PresupuestoViewModel model = new PresupuestoViewModel(IdPresupuesto, NombreDestinatario, FechaCreacion);
+        return View(model);//haciendo q la vista update no reciba un model sino un viewmodel, tp9
     }
 
-    // [HttpPost("Update")]esto no funciona, porque a pesar de que supuestamente, el id del producto deberia llegar de ProductoIndexViewModel, (ya q fue cargado en el httpget), asp net core tiene q rearmar el objeto mediante su model binder. como tiene q rearmar el objeto, necesita el id, entonces este tiene q llegar ya sea desde la ruta o desde un campo hidden del form
+    // [HttpPost("Update")]esto no funciona, porque a pesar de que supuestamente, el id del producto deberia llegar de ProductoViewModel, (ya q fue cargado en el httpget), asp net core tiene q rearmar el objeto mediante su model binder. como tiene q rearmar el objeto, necesita el id, entonces este tiene q llegar ya sea desde la ruta o desde un campo hidden del form
     [HttpPost("Presupuestos/Update/{IdPresupuesto}")]
-    public IActionResult Update(Presupuesto presupuesto)
+    public IActionResult Update(PresupuestoViewModel viewModel)
     {
-        _presupuestoRepository.ModificarPresupuesto(presupuesto);
+        Presupuesto model = new Presupuesto(viewModel);
+        _presupuestoRepository.ModificarPresupuesto(model);
         return RedirectToAction("Index", "Presupuestos");
-    }
+    } 
 
     [HttpPost("Presupuestos/Delete/{IdPresupuesto}")]
     public IActionResult Delete(int IdPresupuesto)

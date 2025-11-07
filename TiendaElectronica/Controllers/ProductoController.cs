@@ -19,20 +19,21 @@ public class ProductosController : Controller
     public IActionResult Index()
     {
         List<Producto> listadoModels = _productoRepository.GetAll();
-        List<ProductoIndexViewModel> listadoViewModels = listadoModels.Select(producto => new ProductoIndexViewModel(producto)).ToList();
+        List<ProductoViewModel> listadoViewModels = listadoModels.Select(producto => new ProductoViewModel(producto)).ToList();
         return View(listadoViewModels);
     }
 
     [HttpGet]
     public IActionResult Create()
     {
-        return View(new Producto());
+        return View(new ProductoViewModel());
     }
     
     [HttpPost]
-    public IActionResult Create(Producto producto)
+    public IActionResult Create(ProductoViewModel viewModel)
     {
-        int resultado = _productoRepository.CrearProducto(producto);
+        Producto model = new Producto(viewModel);
+        int resultado = _productoRepository.CrearProducto(model);
         if (resultado == 0) return RedirectToAction("Error", "Home");
 
         return RedirectToAction("Index", "Productos");
@@ -41,15 +42,15 @@ public class ProductosController : Controller
     [HttpGet("Update/{IdProducto}")] 
     public IActionResult Update(int IdProducto, [FromQuery]string Descripcion, [FromQuery]int Precio)
     {
-        ProductoIndexViewModel ViewModel = new ProductoIndexViewModel(IdProducto, Descripcion, Precio);
+        ProductoViewModel ViewModel = new ProductoViewModel(IdProducto, Descripcion, Precio);
         return View(ViewModel);
     }
 
-    [HttpPost("Update/{IdProducto}")] // [HttpPost("Update")]esto no funciona, porque a pesar de que supuestamente, el id del producto deberia llegar de ProductoIndexViewModel, (ya q fue cargado en el httpget), asp net core tiene q rearmar el objeto mediante su model binder. 
+    [HttpPost("Update/{IdProducto}")] // [HttpPost("Update")]esto no funciona, porque a pesar de que supuestamente, el id del producto deberia llegar de ProductoViewModel, (ya q fue cargado en el httpget), asp net core tiene q rearmar el objeto mediante su model binder. 
     //como tiene q rearmar el objeto, necesita el id, entonces este tiene q llegar ya sea desde la ruta o desde un campo hidden del form
-    public IActionResult Update(ProductoIndexViewModel productoViewModel)
+    public IActionResult Update(ProductoViewModel ProductoViewModel)
     {
-        Producto productoModel = new Producto(productoViewModel.IdProducto, productoViewModel.Descripcion, productoViewModel.Precio);
+        Producto productoModel = new Producto(ProductoViewModel.IdProducto, ProductoViewModel.Descripcion, ProductoViewModel.Precio);
         var updateCorrecto = _productoRepository.ModificarProducto(productoModel);
         if (!updateCorrecto) return RedirectToAction("Error", "Home");
 

@@ -2,22 +2,22 @@ using TiendaElectronica.Models;
 
 namespace  TiendaElectronica.ViewModels;
 
-public class ProductoIndexViewModel //usando ViewModels en lugar de usar directamente el modelo, solo se exponen los tres campos necesarios. Es más seguro, flexible y mantenible
-{
+public class ProductoViewModel //usando ViewModels en lugar de usar directamente el modelo, solo se exponen los tres campos necesarios. Es más seguro, flexible y mantenible. este viewmodel tiene los mismmos datos que producto porque debe mostrar descripcion y precio, y ademas enviar su id en un hidden para sus acciones
+{ //cambio de nombre de ProductoIndexViewModel porque este es mas general y representativo, ademas se reutiliza en todas las vistas de producto
     public int IdProducto { get; set; }
     public string? Descripcion { get; set; }
     public int Precio { get; set; }
 
-    public ProductoIndexViewModel() { }
+    public ProductoViewModel() { }
 
-    public ProductoIndexViewModel(int id, string descripcion, int precio)
+    public ProductoViewModel(int id, string descripcion, int precio)
     {
         IdProducto = id;
         Descripcion = descripcion;
         Precio = precio;
     }
 
-    public ProductoIndexViewModel(Producto producto)
+    public ProductoViewModel(Producto producto)
     {
         IdProducto = producto.IdProducto;
         Descripcion = producto.Descripcion;

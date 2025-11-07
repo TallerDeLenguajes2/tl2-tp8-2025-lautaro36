@@ -1,3 +1,5 @@
+using TiendaElectronica.ViewModels;
+
 namespace TiendaElectronica.Models;
 
 public class Producto
@@ -13,6 +15,13 @@ public class Producto
         IdProducto = id;
         Descripcion = descripcion;
         Precio = precio;
+    }
+
+    public Producto(ProductoViewModel viewModel) //preguntar si es correcto tener un mapeador en el modelo (tp9)
+    {
+        IdProducto = viewModel.IdProducto;
+        Descripcion = viewModel.Descripcion;
+        Precio = viewModel.Precio;
     }
 
 }
