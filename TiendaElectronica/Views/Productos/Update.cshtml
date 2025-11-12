@@ -1,4 +1,4 @@
-@model TiendaElectronica.ViewModels.ProductoViewModel //aca recibo un indexViewModel porque si hacia un updateViewModel, tendria los mismos campos. esto porque el controller debe recibir esttos 3 campos para mapear a producto  
+@model TiendaElectronica.ViewModels.ProductoUpdateViewModel //aca recibo un indexViewModel porque si hacia un updateViewModel, tendria los mismos campos. esto porque el controller debe recibir esttos 3 campos para mapear a producto. al final si hice un update porque si el sistema crece es mejor tenerlos separados
 @{
     ViewData[index: "Title"] = "Modificar producto";
 }
@@ -43,6 +43,7 @@
                             <div class="mb-3">
                                 <label asp-for="@Model.Precio" class="form-label fw-semibold">Precio ($)</label>
                                 <input asp-for="@Model.Precio" class="form-control" type="number" step="100" placeholder="@Model.Precio" />
+                                <span asp-validation-for="@Model.Precio" class="text-danger"></span>
                             </div>
                             
                             <button type="submit" class="btn btn-primary mt-3 w-100">
@@ -63,6 +64,10 @@
     
     @*Iconos de Bootstrap*@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    @*validaciones*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.js"></script>
 </body>
 
 </html>

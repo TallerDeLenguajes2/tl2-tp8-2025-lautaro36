@@ -2,7 +2,7 @@ using TiendaElectronica.Models;
 
 namespace TiendaElectronica.ViewModels;
 
-public class DetalleCreateViewModel
+public class DetalleCreateViewModel //se usa en createDetalle.cshtml
 {
 
     public int IdPresupuesto { get; set; }

@@ -1,8 +1,8 @@
 using TiendaElectronica.Models;
 using TiendaElectronica.ViewModels;
 
-public class DetalleIndexViewModel
-{    
+public class DetalleIndexViewModel //se usa en presupuestoIndexViewModel, ninguna view lo usa especificamente sino al viewModel que lo contiene
+{
     public ProductoViewModel Producto { get; set; }
     public int Cantidad { get; set; }
 

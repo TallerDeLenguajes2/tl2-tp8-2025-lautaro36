@@ -26,7 +26,7 @@ public class Producto
     public Producto(ProductoCreateViewModel viewModel) //constructor para create
     {
         Descripcion = viewModel.Descripcion;
-        Precio = viewModel.Precio;
+        Precio = Convert.ToInt32(viewModel.Precio);
     }
 
 }

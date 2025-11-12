@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using TiendaElectronica.Repositorios;
 using TiendaElectronica.Models;
 using TiendaElectronica.ViewModels;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace TiendaElectronica.Controllers;
 
@@ -32,6 +33,10 @@ public class ProductosController : Controller
     [HttpPost]
     public IActionResult Create(ProductoCreateViewModel viewModel)
     {
+        if(!ModelState.IsValid)
+        {
+            return View(viewModel);
+        }
         Producto model = new Producto(viewModel);
         int resultado = _productoRepository.CrearProducto(model);
         if (resultado == 0) return RedirectToAction("Error", "Home");
@@ -42,20 +47,24 @@ public class ProductosController : Controller
     [HttpGet("Update/{IdProducto}")] 
     public IActionResult Update(int IdProducto, [FromQuery]string Descripcion, [FromQuery]int Precio)
     {
-        ProductoViewModel ViewModel = new ProductoViewModel(IdProducto, Descripcion, Precio);
+        ProductoUpdateViewModel ViewModel = new ProductoUpdateViewModel(IdProducto, Descripcion, Precio);
         return View(ViewModel);
     }
 
     [HttpPost("Update/{IdProducto}")] // [HttpPost("Update")]esto no funciona, porque a pesar de que supuestamente, el id del producto deberia llegar de ProductoViewModel, (ya q fue cargado en el httpget), asp net core tiene q rearmar el objeto mediante su model binder. 
     //como tiene q rearmar el objeto, necesita el id, entonces este tiene q llegar ya sea desde la ruta o desde un campo hidden del form
-    public IActionResult Update(ProductoViewModel ProductoViewModel)
+    public IActionResult Update(ProductoUpdateViewModel ProductoViewModel)
     {
-        Producto productoModel = new Producto(ProductoViewModel.IdProducto, ProductoViewModel.Descripcion, ProductoViewModel.Precio);
+        if(!ModelState.IsValid)
+        {
+            return View(ProductoViewModel);
+        }
+        Producto productoModel = new Producto(ProductoViewModel.IdProducto, ProductoViewModel.Descripcion, Convert.ToInt32(ProductoViewModel.Precio));
         var updateCorrecto = _productoRepository.ModificarProducto(productoModel);
         if (!updateCorrecto) return RedirectToAction("Error", "Home");
 
         return RedirectToAction("Index", "Productos");
-    }
+    }   
 
     // [HttpDelete("Delete/{IdProducto}")] el navegador unicamente puede enviar solicitudes GET y POST, por eso no funciono. 
     // /El framework ignoró  esta acción, porque la solicitud que llegó desde el navegador era un GET, no un DELETE. El atributo [HttpDelete] solo responde a solicitudes DELETE.

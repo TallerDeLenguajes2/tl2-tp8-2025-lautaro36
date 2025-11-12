@@ -29,28 +29,31 @@
                     <div class="card-header bg-primary text-white">
                         <h2 class="h5 mb-0">Complete cada campo</h2>
                     </div>
-                    
+
                     <!-- Adaptación para formulario: utiliza p-4 para padding dentro del body -->
                     <div class="card-body p-4">
                         <form asp-controller="Productos" asp-action="Create" method="post">
-                            
+
                             <div class="mb-3">
                                 <label asp-for="@Model.Descripcion" class="form-label fw-semibold">Descripción</label>
-                                <input asp-for="@Model.Descripcion" class="form-control" placeholder="Ej: Monitor LED 27 pulgadas" />
+                                <input asp-for="@Model.Descripcion" class="form-control"
+                                    placeholder="Ej: Monitor LED 27 pulgadas" />
                                 <span asp-validation-for="@Model.Descripcion" class="text-danger"></span>
                             </div>
 
                             <div class="mb-3">
                                 <label asp-for="@Model.Precio" class="form-label fw-semibold">Precio ($)</label>
-                                <input asp-for="@Model.Precio" class="form-control" type="number" step="0.01" placeholder="Ej: 299.99" />
+                                <input asp-for="@Model.Precio" class="form-control" type="number" step="0.01"
+                                    placeholder="Ej: 1000" />
                                 <span asp-validation-for="@Model.Precio" class="text-danger"></span>
                             </div>
-                            
+
                             <button type="submit" class="btn btn-primary mt-3 w-100">
                                 <i class="bi bi-save me-2"></i> Crear Producto
                             </button>
-                            
-                            <a asp-controller="Productos" asp-action="Index" class="btn btn-outline-secondary mt-2 w-100">
+
+                            <a asp-controller="Productos" asp-action="Index"
+                                class="btn btn-outline-secondary mt-2 w-100">
                                 Volver al Listado
                             </a>
                         </form>
@@ -61,9 +64,14 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     @*Iconos de Bootstrap*@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    @*validaciones*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.js"></script>
 </body>
 
 </html>

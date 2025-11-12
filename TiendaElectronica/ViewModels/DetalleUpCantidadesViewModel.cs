@@ -1,6 +1,6 @@
 namespace TiendaElectronica.ViewModels;
 
-public class DetalleUpCantidadesViewModel
+public class DetalleUpCantidadesViewModel //se usa en updateCantides.cshtml
 {
 
     public int IdPresupuesto { get; set; }

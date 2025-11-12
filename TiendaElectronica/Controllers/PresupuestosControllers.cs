@@ -18,7 +18,7 @@ public class PresupuestosController : Controller
     public IActionResult Index()
     {
         var listadoModels = _presupuestoRepository.GetAll();
-        var listadoViewModels = listadoModels.Select(elementoModel => new PresupuestoIndexViewModels(elementoModel)).ToList();//mapeo cada presupuesto del listado a un listado de presupuesto view model, usando select. paso cada presupuesto individualmente al constructor de PresupuestoIndexViewModels
+        var listadoViewModels = listadoModels.Select(elementoModel => new PresupuestoViewModel(elementoModel)).ToList();//mapeo cada presupuesto del listado a un listado de presupuesto view model, usando select. paso cada presupuesto individualmente al constructor de PresupuestoIndexViewModels
         return View(listadoViewModels);
     }
 
@@ -29,7 +29,7 @@ public class PresupuestosController : Controller
         if (presupuestoModel == null) return RedirectToAction("Error", "Home");
         // View("Error") Muestra "error" sin salir de la pagina details.cshtml. Renderiza Views/Shared/Error.cshtml directamente. De esta forma, arroja NullReferenceException en Error.cshtml. AVERIGUAR COMO RESOLVERLO
         // return RedirectToAction("Error", "Home") Redirige a la página de error global. Va al método Error() del HomeController. muestra la vista Error.cshtml correctamente
-        var presupuestoViewModel = new PresupuestoIndexViewModels(presupuestoModel);
+        var presupuestoViewModel = new PresupuestoViewModel(presupuestoModel);
 
         return View(presupuestoViewModel);
     }
@@ -38,13 +38,13 @@ public class PresupuestosController : Controller
     public IActionResult Create()
     {
         ProductoRepository productoRepository = new ProductoRepository(); //creo un producto repository para poder traer el listado de productos y guardarlo en el view model.
-        var ViewModel = new PresupuestoCreateViewModels();
+        var ViewModel = new PresupuestoCreateViewModel();
         ViewModel.ListadoProductos = productoRepository.GetAll(); //teniendo el listado de productos aca, puedo listar cada producto en la view y agregar un producto al presupuesto a la vez que es creado
         return View(ViewModel);
     }
 
     [HttpPost]
-    public IActionResult Create(PresupuestoCreateViewModels ViewModel)
+    public IActionResult Create(PresupuestoCreateViewModel ViewModel)
     {
         Presupuesto model = new Presupuesto(ViewModel.IdPresupuesto, ViewModel.NombreDestinatario, ViewModel.FechaCreacion);
         int IdPresupuesto = _presupuestoRepository.CrearPresupuesto(model);
@@ -59,13 +59,13 @@ public class PresupuestosController : Controller
     [HttpGet("Presupuestos/Update/{IdPresupuesto}")]
     public IActionResult Update(int IdPresupuesto, [FromQuery] string NombreDestinatario, [FromQuery] DateOnly FechaCreacion)
     {
-        PresupuestoViewModel model = new PresupuestoViewModel(IdPresupuesto, NombreDestinatario, FechaCreacion);
+        PresupuestoUpdateViewModel model = new PresupuestoUpdateViewModel(IdPresupuesto, NombreDestinatario, FechaCreacion);
         return View(model);//haciendo q la vista update no reciba un model sino un viewmodel, tp9
     }
 
     // [HttpPost("Update")]esto no funciona, porque a pesar de que supuestamente, el id del producto deberia llegar de ProductoViewModel, (ya q fue cargado en el httpget), asp net core tiene q rearmar el objeto mediante su model binder. como tiene q rearmar el objeto, necesita el id, entonces este tiene q llegar ya sea desde la ruta o desde un campo hidden del form
     [HttpPost("Presupuestos/Update/{IdPresupuesto}")]
-    public IActionResult Update(PresupuestoViewModel viewModel)
+    public IActionResult Update(PresupuestoUpdateViewModel viewModel)
     {
         Presupuesto model = new Presupuesto(viewModel);
         _presupuestoRepository.ModificarPresupuesto(model);

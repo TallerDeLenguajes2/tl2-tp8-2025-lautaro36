@@ -17,7 +17,7 @@ public class Presupuesto
         FechaCreacion = fecha;
     }
 
-    public Presupuesto(PresupuestoViewModel viewModel) //en un sistema con verdadero aislamiento  se usa un clase mapper, que solo mapea de un modelo a las viewmodels y viceversa
+    public Presupuesto(PresupuestoUpdateViewModel viewModel) //en un sistema con verdadero aislamiento  se usa un clase mapper, que solo mapea de un modelo a las viewmodels y viceversa
     {
         IdPresupuesto = viewModel.IdPresupuesto;
         NombreDestinatario = viewModel.NombreDestinatario;

@@ -2,7 +2,7 @@ using TiendaElectronica.Models;
 
 namespace TiendaElectronica.ViewModels;
 
-public class PresupuestoCreateViewModels
+public class PresupuestoCreateViewModel //se  usa en create.cstml
 {
     public int IdPresupuesto { get; set; }
     public string? NombreDestinatario { get; set; }
