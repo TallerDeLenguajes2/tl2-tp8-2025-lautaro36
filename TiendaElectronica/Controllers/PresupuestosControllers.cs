@@ -73,6 +73,10 @@ public class PresupuestosController : Controller
     [HttpPost("Presupuestos/Update/{IdPresupuesto}")]
     public IActionResult Update(PresupuestoUpdateViewModel viewModel)
     {
+        if (!ModelState.IsValid)
+        {
+            return View(viewModel);
+        }
         Presupuesto model = new Presupuesto(viewModel);
         _presupuestoRepository.ModificarPresupuesto(model);
         return RedirectToAction("Index", "Presupuestos");
