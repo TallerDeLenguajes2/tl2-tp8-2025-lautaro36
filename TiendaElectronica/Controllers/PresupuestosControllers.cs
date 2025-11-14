@@ -46,12 +46,18 @@ public class PresupuestosController : Controller
     [HttpPost]
     public IActionResult Create(PresupuestoCreateViewModel ViewModel)
     {
+        if (!ModelState.IsValid)
+        {
+            ProductoRepository productoRepository = new ProductoRepository();
+            ViewModel.ListadoProductos = productoRepository.GetAll();
+            return View(ViewModel);
+        }
         Presupuesto model = new Presupuesto(ViewModel.IdPresupuesto, ViewModel.NombreDestinatario, ViewModel.FechaCreacion);
         int IdPresupuesto = _presupuestoRepository.CrearPresupuesto(model);
 
         if (IdPresupuesto == 0) return RedirectToAction("Error", "Home");
 
-        _presupuestoRepository.AgregarAlPresupuesto(IdPresupuesto, ViewModel.IdProducto, ViewModel.Cantidad);
+        _presupuestoRepository.AgregarAlPresupuesto(IdPresupuesto, Convert.ToInt32(ViewModel.IdProducto), Convert.ToInt32(ViewModel.Cantidad));
 
         return RedirectToAction("Index", "Presupuestos");
     }

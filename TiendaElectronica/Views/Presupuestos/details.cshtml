@@ -46,7 +46,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>@Model.FechaCreacion.ToString("dd/MM/yyyy")</td>
+                                    <td>@Model.FechaCreacion?.ToString("dd/MM/yyyy")</td>
                                     <td>$@Model.MontoPresupuesto</td>
                                     <td>$@Model.MontoPresupuestoConIva</td>
                                     <td>@Model.CantidadProductos</td>

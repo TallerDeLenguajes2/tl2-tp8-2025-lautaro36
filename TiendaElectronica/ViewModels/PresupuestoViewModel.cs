@@ -6,7 +6,7 @@ public class PresupuestoViewModel //se usa para las views de index y details, am
 {
     public int IdPresupuesto { get; set; }
     public string? NombreDestinatario { get; set; }
-    public DateOnly FechaCreacion { get; set; }
+    public DateOnly? FechaCreacion { get; set; }
     public List<DetalleIndexViewModel> ListadoDetalles { get; set; } = new List<DetalleIndexViewModel>();   
     public int MontoPresupuesto { get; set; }
     public double MontoPresupuestoConIva { get; set; }

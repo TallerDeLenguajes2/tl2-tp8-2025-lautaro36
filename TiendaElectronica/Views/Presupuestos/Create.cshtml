@@ -59,6 +59,7 @@
                                     class="form-control"> @* asp-items="@(new SelectList(...))" genera los <option> automáticamente, usando value=Id, text=Descripcion *@                                    
                                     <option value="">-- Seleccioná un producto --</option>
                                 </select>
+                                <span asp-validation-for="@Model.IdProducto" class="text-danger"></span>
                             </div>
 
                             <div class="mb-3">
