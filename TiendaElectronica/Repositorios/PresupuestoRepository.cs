@@ -4,12 +4,19 @@ using TiendaElectronica.ViewModels;
 
 namespace TiendaElectronica.Repositorios;
 
-public class PresupuestoRepository
+public class PresupuestoRepository : IPresupuestoRepository
 {
-    string stringConnection = "Data Source=Tienda.db;Cache=Shared";
+    private readonly string _connectionString; 
+    string stringConnectionDb = "Data Source=Tienda.db;Cache=Shared";
+
+    public PresupuestoRepository(string connectionString)
+    {
+        _connectionString = connectionString;
+    }
+
     public SqliteConnection GetConnection()
     {
-        var connection = new SqliteConnection(stringConnection);
+        var connection = new SqliteConnection(stringConnectionDb);
         connection.Open();
         return connection;
     }

@@ -7,12 +7,10 @@ namespace TiendaElectronica.Controllers;
 
 public class PresupuestosController : Controller
 {
-    private readonly ILogger<PresupuestosController> _logger;
-    private PresupuestoRepository _presupuestoRepository;
-    public PresupuestosController(ILogger<PresupuestosController> logger)
+    private IPresupuestoRepository _presupuestoRepository;
+    public PresupuestosController(IPresupuestoRepository presupuestoRepository)
     {
-        _logger = logger;
-        _presupuestoRepository = new PresupuestoRepository();
+        _presupuestoRepository = presupuestoRepository;
     }
 
     public IActionResult Index()

@@ -3,21 +3,19 @@ using TiendaElectronica.Models;
 
 namespace TiendaElectronica.Repositorios;
 
-// public interface IProductoRepository
-// {
-//     SqliteConnection GetOpenConnection();
-//     int CrearProducto(Producto producto);
-//     bool ModificarProducto(int id, Producto producto);
-//     List<Producto> GetAll();
-//     Producto GetDetallesByID(int id);
-//     int DeleteByID(int id);
-// }
-public class ProductoRepository
+public class ProductoRepository : IProductoRepository
 {
-    string stringConnection = "Data Source=Tienda.db;Cache=Shared";
+    private readonly string _connectionString;
+    string stringConnectionDb = "Data Source=Tienda.db;Cache=Shared";
+
+    public ProductoRepository(string connectionString)
+    {
+        _connectionString = connectionString;
+    }
+
     public SqliteConnection GetOpenConnection()
     {
-        SqliteConnection connection = new SqliteConnection(stringConnection);
+        SqliteConnection connection = new SqliteConnection(stringConnectionDb);
         connection.Open();
         return connection;
     }

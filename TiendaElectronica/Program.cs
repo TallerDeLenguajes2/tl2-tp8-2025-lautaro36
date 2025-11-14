@@ -1,4 +1,11 @@
+using TiendaElectronica.Repositorios;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
+builder.Services.AddScoped<IPresupuestoRepository, PresupuestoRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

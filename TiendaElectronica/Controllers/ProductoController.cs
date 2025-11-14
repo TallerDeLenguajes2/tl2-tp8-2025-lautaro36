@@ -9,12 +9,10 @@ namespace TiendaElectronica.Controllers;
 
 public class ProductosController : Controller
 {
-    private readonly ILogger<ProductosController> _logger;
-    private ProductoRepository _productoRepository;
-    public ProductosController(ILogger<ProductosController> logger)
+    private readonly IProductoRepository _productoRepository;
+    public ProductosController(IProductoRepository productoRepository)
     {
-        _logger = logger;
-        _productoRepository = new ProductoRepository();
+        _productoRepository = productoRepository;
     }
 
     public IActionResult Index()
