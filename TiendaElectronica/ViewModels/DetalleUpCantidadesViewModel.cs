@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace TiendaElectronica.ViewModels;
 
 public class DetalleUpCantidadesViewModel //se usa en updateCantides.cshtml
@@ -6,7 +8,10 @@ public class DetalleUpCantidadesViewModel //se usa en updateCantides.cshtml
     public int IdPresupuesto { get; set; }
     public int IdProducto { get; set; }
     public string? Descripcion { get; set; }
-    public int Cantidad { get; set; }
+
+    [Required(ErrorMessage = "La cantidad del producto es obligatoria")]
+    [Range(1, 50, ErrorMessage = "La {0} debe ser mayor a {1} y menor a {2}")]
+    public int? Cantidad { get; set; }
 
     public DetalleUpCantidadesViewModel() { }
     //InvalidOperationException: Could not create an instance of type 'TiendaElectronica.ViewModels.DetalleUpCantidadesViewModel'. Model bound complex types must not be abstract or value types and must have a parameterless constructor. Record types must have a single primary constructor. Alternatively, give the 'detalleViewModel' parameter a non-null default value. 

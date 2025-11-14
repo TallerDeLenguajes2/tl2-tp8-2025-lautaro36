@@ -38,19 +38,20 @@
 
                             <!-- Grupo para la selección del producto -->
                             <div class="mb-3">
-                                <label for="IdProducto">Producto</label>
-                                <select name="IdProducto"
+                                <label asp-for="IdProducto">Producto</label>
+                                <select asp-for="IdProducto"
                                     asp-items="@(new SelectList(Model.ListadoProductos, "IdProducto", "Descripcion"))"
                                     class="form-control"> @* asp-items="@(new SelectList(...))" genera los <option> automáticamente, usando value=Id, text=Descripcion *@                                    
                                     <option value="">-- Seleccioná un producto --</option>
                                 </select>
+                                <span asp-validation-for="@Model.IdProducto" class="text-danger"></span>
                             </div>
 
                             <div class="mb-3">
-                                <label for="Cantidad" class="form-label fw-semibold">Cantidad</label>
-                                <input name="Cantidad" class="form-control" type="number" step="1" min="1"
+                                <label asp-for="Cantidad" class="form-label fw-semibold">Cantidad</label>
+                                <input asp-for="Cantidad" class="form-control" type="number" step="1" min="1"
                                     placeholder="Ej: 1" />
-                                <span for="Cantidad" class="text-danger"></span>
+                                <span asp-validation-for="@Model.Cantidad" class="text-danger"></span>
                             </div>
 
                             <input type="hidden" value="@Model.IdPresupuesto" name="IdPresupuesto">

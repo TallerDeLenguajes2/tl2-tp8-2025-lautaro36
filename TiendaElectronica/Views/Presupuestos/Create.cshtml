@@ -37,17 +37,17 @@
                         <form asp-controller="Presupuestos" asp-action="Create" method="post">
 
                             <div class="mb-3">
-                                <label asp-for="@Model.NombreDestinatario"
+                                <label asp-for="NombreDestinatario"
                                     class="form-label fw-semibold">Destinatario</label>
-                                <input asp-for="@Model.NombreDestinatario" class="form-control"
+                                <input asp-for="NombreDestinatario" class="form-control"
                                     placeholder="Nombre de la empresa o cliente" />
                                 <span asp-validation-for="@Model.NombreDestinatario" class="text-danger"></span>
                             </div>
 
                             <div class="mb-3">
-                                <label asp-for="@Model.FechaCreacion" class="form-label fw-semibold">Fecha de
+                                <label asp-for="FechaCreacion" class="form-label fw-semibold">Fecha de
                                     Creación</label>
-                                <input asp-for="@Model.FechaCreacion" class="form-control" type="date" />
+                                <input asp-for="FechaCreacion" class="form-control" type="date" />
                                 <span asp-validation-for="@Model.FechaCreacion" class="text-danger"></span>
                             </div>
 
@@ -63,8 +63,8 @@
                             </div>
 
                             <div class="mb-3">
-                                <label asp-for="@Model.Cantidad" class="form-label fw-semibold">Cantidad</label>
-                                <input asp-for="@Model.Cantidad" class="form-control" type="number" step="1" min="1"
+                                <label asp-for="Cantidad" class="form-label fw-semibold">Cantidad</label>
+                                <input asp-for="Cantidad" class="form-control" type="number" step="1" min="1"
                                     placeholder="Ej: 1" />
                                 <span asp-validation-for="@Model.Cantidad" class="text-danger"></span>
                             </div>

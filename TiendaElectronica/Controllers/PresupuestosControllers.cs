@@ -80,7 +80,7 @@ public class PresupuestosController : Controller
         Presupuesto model = new Presupuesto(viewModel);
         _presupuestoRepository.ModificarPresupuesto(model);
         return RedirectToAction("Index", "Presupuestos");
-    } 
+    }
 
     [HttpPost("Presupuestos/Delete/{IdPresupuesto}")]
     public IActionResult Delete(int IdPresupuesto)
@@ -105,6 +105,10 @@ public class PresupuestosController : Controller
     [HttpPost("UpdateCantidades")]
     public IActionResult UpdateCantidades(DetalleUpCantidadesViewModel detalleViewModel)
     {
+        if (!ModelState.IsValid)
+        {
+            return View(detalleViewModel);
+        }
         bool resultado = _presupuestoRepository.UpdateCantidades(detalleViewModel);
         if (!resultado) return RedirectToAction("Error", "Home");
         return Redirect($"Details/{detalleViewModel.IdPresupuesto}"); //segun chatgpt esto no es seguro, pero no encontre otra forma de hacer q funcione sin tener q modificar el metodo details
@@ -127,12 +131,18 @@ public class PresupuestosController : Controller
     }
 
     [HttpPost("CreateDetalle/{IdPresupuesto}")]
-    public IActionResult CreateDetalle(int IdPresupuesto, int IdProducto, int Cantidad)
+    public IActionResult CreateDetalle(DetalleCreateViewModel viewModel)
     {
-        var resultado = _presupuestoRepository.AgregarAlPresupuesto(IdPresupuesto, IdProducto, Cantidad);
+        if (!ModelState.IsValid)
+        {
+            ProductoRepository productosRepository = new ProductoRepository();
+            viewModel.ListadoProductos = productosRepository.GetAll();
+            return View(viewModel);
+        }
+        var resultado = _presupuestoRepository.AgregarAlPresupuesto(viewModel.IdPresupuesto, Convert.ToInt32(viewModel.IdProducto), Convert.ToInt32(viewModel.Cantidad));
         if (resultado == -1) return RedirectToAction("Error", "Home");
         else if (resultado == 0) return RedirectToAction("Error", "Home");
-        return Redirect($"Details/{IdPresupuesto}");
+        return RedirectToAction("Details", "Presupuestos", new { id = viewModel.IdPresupuesto });//de esta forma me redirige adonde corresponde sin tener q modificar el endpoint q ya esta funcionando
     }
 
 }
