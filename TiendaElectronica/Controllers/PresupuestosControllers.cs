@@ -7,10 +7,12 @@ namespace TiendaElectronica.Controllers;
 
 public class PresupuestosController : Controller
 {
-    private IPresupuestoRepository _presupuestoRepository;
-    public PresupuestosController(IPresupuestoRepository presupuestoRepository)
+    private readonly IPresupuestoRepository _presupuestoRepository;
+    private readonly IProductoRepository _productoRepository;
+    public PresupuestosController(IPresupuestoRepository presupuestoRepository, IProductoRepository productoRepository) //agrego un productosRepository al constructor porque voy a necesitarlo en algunos metodos y usando DI esta es la forma correcta hacerlo
     {
         _presupuestoRepository = presupuestoRepository;
+        _productoRepository = productoRepository;
     }
 
     public IActionResult Index()
@@ -35,9 +37,8 @@ public class PresupuestosController : Controller
     [HttpGet]
     public IActionResult Create()
     {
-        ProductoRepository productoRepository = new ProductoRepository(); //creo un producto repository para poder traer el listado de productos y guardarlo en el view model.
         var ViewModel = new PresupuestoCreateViewModel();
-        ViewModel.ListadoProductos = productoRepository.GetAll(); //teniendo el listado de productos aca, puedo listar cada producto en la view y agregar un producto al presupuesto a la vez que es creado
+        ViewModel.ListadoProductos = _productoRepository.GetAll();
         return View(ViewModel);
     }
 
@@ -46,8 +47,7 @@ public class PresupuestosController : Controller
     {
         if (!ModelState.IsValid)
         {
-            ProductoRepository productoRepository = new ProductoRepository();
-            ViewModel.ListadoProductos = productoRepository.GetAll();
+            ViewModel.ListadoProductos = _productoRepository.GetAll();
             return View(ViewModel);
         }
         Presupuesto model = new Presupuesto(ViewModel.IdPresupuesto, ViewModel.NombreDestinatario, ViewModel.FechaCreacion);
@@ -123,8 +123,7 @@ public class PresupuestosController : Controller
     [HttpGet("CreateDetalle/{IdPresupuesto}")]
     public IActionResult CreateDetalle(int IdPresupuesto)
     {
-        ProductoRepository productosRepository = new ProductoRepository();
-        List<Producto> listadoModels = productosRepository.GetAll();
+        List<Producto> listadoModels = _productoRepository.GetAll();
         return View(new DetalleCreateViewModel(IdPresupuesto, listadoModels));
     }
 
@@ -133,8 +132,7 @@ public class PresupuestosController : Controller
     {
         if (!ModelState.IsValid)
         {
-            ProductoRepository productosRepository = new ProductoRepository();
-            viewModel.ListadoProductos = productosRepository.GetAll();
+            viewModel.ListadoProductos = _productoRepository.GetAll();
             return View(viewModel);
         }
         var resultado = _presupuestoRepository.AgregarAlPresupuesto(viewModel.IdPresupuesto, Convert.ToInt32(viewModel.IdProducto), Convert.ToInt32(viewModel.Cantidad));

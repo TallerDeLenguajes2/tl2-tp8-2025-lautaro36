@@ -6,11 +6,13 @@ namespace TiendaElectronica.Repositorios;
 
 public class PresupuestoRepository : IPresupuestoRepository
 {
-    private readonly string _connectionString; 
+    private readonly string? _connectionString; 
     string stringConnectionDb = "Data Source=Tienda.db;Cache=Shared";
 
-    public PresupuestoRepository(string connectionString)
+    public PresupuestoRepository(string? connectionString)
     {
+        Console.WriteLine($"[DEBUG REPO] Cadena recibida: {connectionString}");
+        Console.WriteLine($"[DEBUG REPO] Cadena recibida: {stringConnectionDb}");
         _connectionString = connectionString;
     }
 

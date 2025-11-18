@@ -6,17 +6,16 @@ namespace TiendaElectronica.Repositorios;
 
 public class UserRepository : IUserRepository
 {
-    string stringConnectionDb = "Data Source=Tienda.db;Cache=Shared";
-    private readonly string _connectionString;
+    private readonly string? _connectionString;
 
-    public UserRepository(string connectionString)
+    public UserRepository(string? connectionString)
     {
         _connectionString = connectionString;
     }
 
     public SqliteConnection GetOpenConnection()
     {
-        SqliteConnection connection = new SqliteConnection(stringConnectionDb);
+        SqliteConnection connection = new SqliteConnection(_connectionString);
         connection.Open();
         return connection;
     }

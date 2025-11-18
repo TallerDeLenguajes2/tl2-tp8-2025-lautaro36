@@ -4,25 +4,31 @@ namespace TiendaElectronica.Repositorios;
 
 public class AuthenticationService : IAuthenticationService
 {
-    string stringConnectionDb = "Data Source=Tienda.db;Cache=Shared";
-    private readonly string _connectionString;
+    private readonly string? _connectionString;
 
-    public AuthenticationService(string connectionString)
+    public AuthenticationService(string? connectionString)
     {
         _connectionString = connectionString;
     }
 
     public SqliteConnection GetOpenConnection()
     {
-        SqliteConnection connection = new SqliteConnection(stringConnectionDb);
+        SqliteConnection connection = new SqliteConnection(_connectionString);
         connection.Open();
         return connection;
     }
     public bool Login(string username, string password)
     {
-        
+        //seguir con la logica de cada metodo. luego armar el model de authentication ?. seguir con punto 4
+        return true;
     }
-    public void Logout();
-    public bool IsAuthenticated ();
-    public bool HasAccessLevel(string requiredAccessLevel);
+    public void Logout(){}
+    public bool IsAuthenticated()
+    {
+        return true;
+    }
+    public bool HasAccessLevel(string requiredAccessLevel)
+    {
+        return true;
+    }
 }
