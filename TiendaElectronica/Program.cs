@@ -31,10 +31,10 @@ builder.Services.AddScoped<IUserRepository>(provider =>
     return new UserRepository(connectionString);
 });
 
-builder.Services.AddScoped<IAuthenticationService>(provider =>
-{
-    return new AuthenticationService(connectionString);
-});
+// builder.Services.AddScoped<IAuthenticationService>(provider =>
+// {
+//     return new AuthenticationService(connectionString);
+// }); prueba
 
 /*
 builder.Services.AddScoped<IProductoRepository>(provider =>

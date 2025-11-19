@@ -20,22 +20,21 @@ public class UserRepository : IUserRepository
         return connection;
     }
 
-    public User? GetUser(string username, string password)
+    public User? GetUser(string username)
     {
         User? user = null;
 
         using var connection = GetOpenConnection();
-        string queryString = "SELECT Id, Nombre, Username, Password, Rol  FROM Usuarios WHERE Username = @username AND Password = @password";
+        string queryString = "SELECT IdUsuarios, Nombre, Username, Password, PasswordHash, Rol  FROM Usuarios WHERE Username = @username";
 
         var command = new SqliteCommand(queryString, connection);
         command.Parameters.Add(new SqliteParameter("@username", username));
-        command.Parameters.Add(new SqliteParameter("@password", password));
 
         using(SqliteDataReader reader = command.ExecuteReader())
         {
             while (reader.Read())
             {
-                user = new User(Convert.ToInt32(reader["Id"]), reader["Nombre"].ToString(), reader["Username"].ToString(), reader["Password"].ToString(), Convert.ToInt32(reader["Rol"]));
+                user = new User(Convert.ToInt32(reader["IdUsuarios"]), reader["Nombre"].ToString(), reader["Username"].ToString(), reader["Password"].ToString(), reader["PasswordHash"].ToString()/*, Convert.ToInt32(reader["Rol"]) prueba*/);
             }
         }
         connection.Close();

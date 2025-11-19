@@ -6,19 +6,16 @@ namespace TiendaElectronica.Repositorios;
 
 public class PresupuestoRepository : IPresupuestoRepository
 {
-    private readonly string? _connectionString; 
-    string stringConnectionDb = "Data Source=Tienda.db;Cache=Shared";
+    private readonly string? _connectionString;
 
     public PresupuestoRepository(string? connectionString)
     {
-        Console.WriteLine($"[DEBUG REPO] Cadena recibida: {connectionString}");
-        Console.WriteLine($"[DEBUG REPO] Cadena recibida: {stringConnectionDb}");
         _connectionString = connectionString;
     }
 
     public SqliteConnection GetConnection()
     {
-        var connection = new SqliteConnection(stringConnectionDb);
+        var connection = new SqliteConnection(_connectionString);
         connection.Open();
         return connection;
     }
@@ -65,9 +62,9 @@ public class PresupuestoRepository : IPresupuestoRepository
         }
     }
 
-    public Presupuesto GetDetallesById(int id)
+    public Presupuesto? GetDetallesById(int id)
     {
-        Presupuesto presupuesto = null;
+        Presupuesto? presupuesto = null;
 
         using var connection = GetConnection();
         string queryString = "SELECT  pre.IdPresupuesto AS IdPresupuesto, pre.NombreDestinatario AS NombreDestinatario, pre.FechaCreacion AS FechaCreacion, d.Cantidad AS Cantidad, pro.IdProducto AS IdProducto, pro.Descripcion AS Descripcion, pro.Precio AS Precio FROM PresupuestosDetalle d JOIN Presupuestos pre ON d.IdPresupuesto = pre.IdPresupuesto JOIN Productos pro ON d.IdProducto = pro.IdProducto WHERE pre.IdPresupuesto = @id";

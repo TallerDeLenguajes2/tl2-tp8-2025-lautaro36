@@ -6,5 +6,5 @@ namespace TiendaElectronica.Repositorios;
 public interface IUserRepository
 {
     SqliteConnection GetOpenConnection();
-    User? GetUser(string username, string password);
+    User? GetUser(string username);
 }
