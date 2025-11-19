@@ -34,7 +34,7 @@ public class UserRepository : IUserRepository
         {
             while (reader.Read())
             {
-                user = new User(Convert.ToInt32(reader["IdUsuarios"]), reader["Nombre"].ToString(), reader["Username"].ToString(), reader["Password"].ToString(), reader["PasswordHash"].ToString()/*, Convert.ToInt32(reader["Rol"]) prueba*/);
+                user = new User(Convert.ToInt32(reader["IdUsuarios"]), reader["Nombre"].ToString(), reader["Username"].ToString(), reader["Password"].ToString(), reader["PasswordHash"].ToString(), Convert.ToInt32(reader["Rol"]));
             }
         }
         connection.Close();

@@ -13,8 +13,8 @@ builder.Services.AddSession(options =>
 });
 
 
-//   "ConnectionStrings": {"Default": "Data Source=Tienda.db;Cache=Shared" } esto va en appsettings.json para poder obtener la cadena de conexion para el constructor de los repos
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection"); //obtengo una unica vez la cadena para todas instanciaciones de repos. esta bien porque el connection string no cambia en tiempo de ejecución (salvo raras excepciones). Captura el connectionString como variable externa
+// 18/11  "ConnectionStrings": {"Default": "Data Source=Tienda.db;Cache=Shared" } esto va en appsettings.json para poder obtener la cadena de conexion para el constructor de los repos
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection"); //18/11 obtengo una unica vez la cadena para todas instanciaciones de repos. esta bien porque el connection string no cambia en tiempo de ejecución (salvo raras excepciones). Captura el connectionString como variable externa. 19/11 esta no es la forma mas DI FULL, continua al final
 //registros de DI
 builder.Services.AddScoped<IPresupuestoRepository>(provider =>
 {
@@ -31,10 +31,33 @@ builder.Services.AddScoped<IUserRepository>(provider =>
     return new UserRepository(connectionString);
 });
 
-// builder.Services.AddScoped<IAuthenticationService>(provider =>
-// {
-//     return new AuthenticationService(connectionString);
-// }); prueba
+builder.Services.AddScoped<IAuthenticationService>(provider =>
+{
+    var userRepository = provider.GetRequiredService<IUserRepository>();
+    var contextAccessor = provider.GetRequiredService<IHttpContextAccessor>();
+
+    return new AuthenticationService(connectionString, userRepository, contextAccessor);
+});
+
+/*19/11 para hacer esto de la forma mas correcta posible:
+crear una clase DatabaseOptions con campo ConnectionString
+agregar seccion dedicada DatabaseOptions a appsettings.json con ConnectionString
+agregar en porgram.cs builder.Services.Configure<DatabaseOptions>(
+    builder.Configuration.GetSection("DatabaseOptions")); bindeo de opciones
+a partir de aca habria 2 opciones para armar los servicios: 
+1 
+-que cada constructor siga recibiendo string connectionString
+-agregar en cada registro de DI var dbOptions = provider.GetRequiredService<IOptions<DatabaseOptions>>().Value;
+-luego return new AuthenticationService(dbOptions.connectionString...
+2
+-modificar el constructor de cada repo para que reciba, en vez de string connectionString, IOptions<DataBaseOptions> dboptions (obtengo una instancia de DatabaseOptions bindeada con las configuraciones de appsettings, respeteando el Options Pattern (muchas ventajas))
+-los campos ConnectionString = dbOptions.value.ConnectionString
+-luego, el repo usa DI para obtener la config
+obteniendo todo desde appsettings (o archvios json), se respeta que El código no debería cambiar cuando cambian los valores de configuración.
+teniendo cosas como URLs de APIs, Strings de conexión, Timeouts, Opciones de logging, Claves, tokens, endpoints  en archivos, la app usa los valores aunque cambien sin tocar codigo. permite configurar por ambiente, es mas seguro, se evitan valores magicos, hot reload, facilita mocking y testing, etc. 
+por lo general se hardcodea solo valores de variables que no cambian nunca o constantes de logca 
+a aplicar luego  de entregar el tp 10
+*/
 
 /*
 builder.Services.AddScoped<IProductoRepository>(provider =>

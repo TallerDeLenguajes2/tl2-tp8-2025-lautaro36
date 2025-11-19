@@ -9,14 +9,14 @@ public class User
     public string? PasswordHash {get; set;} //hash del pass, no texto plano
     public Roles Rol {get; set;}
 
-    public User(int id, string? nombre, string? user, string? pass, string? hash/*, int rol*/)
+    public User(int id, string? nombre, string? user, string? pass, string? hash, int rol)
     {
         Id = id;
         Nombre = nombre;
         Username = user;
         Password = pass;
         PasswordHash = hash;
-        /*Rol = (Roles)rol;* prueba*/
+        Rol = (Roles)rol;
     }
 }
 
