@@ -8,15 +8,13 @@ public class AuthenticationService : IAuthenticationService
 {
     private readonly string? _connectionString;
     private readonly IUserRepository _userRepository;
-    private readonly IHttpContextAccessor _httpContextAccesor;
-    private readonly HttpContext? _context;
+    public IHttpContextAccessor _httpContextAccesor;
 
     public AuthenticationService(string? connectionString, IUserRepository userRepository, IHttpContextAccessor httpContextAccessor)
     {
         _connectionString = connectionString;
         _userRepository = userRepository;
         _httpContextAccesor = httpContextAccessor;
-        _context = httpContextAccessor.HttpContext;
     }
 
     public SqliteConnection GetOpenConnection()
@@ -27,27 +25,44 @@ public class AuthenticationService : IAuthenticationService
     }
     public bool Login(string username, string password)
     {
+        var context = _httpContextAccesor.HttpContext;
         User? user = _userRepository.GetUser(username);
-        //validacion del hash
         if (user == null) return false;
+
+        if (context == null) throw new InvalidOperationException("HttpContext no está disponible.");
+
+        //validacion del hash
         bool isPassWordValid = BCrypt.Net.BCrypt.Verify(password, user.PasswordHash);
-        if(!isPassWordValid) Console.WriteLine("COntrasenia incorrecta");
-        if (_context == null) throw new InvalidOperationException("HttpContext no está disponible.");
+        if (!isPassWordValid) return false;
 
-        _context.Session.SetString("IsAuthenticated", "true");
-        _context.Session.SetString("User", user.Username);
-        _context.Session.SetString("Nombre", user.Nombre);
-        _context.Session.SetString("Rol", (user.Rol).ToString());
-
+        context.Session.SetString("IsAuthenticated", "true");
+        context.Session.SetString("User", user.Username);
+        context.Session.SetString("Nombre", user.Nombre);
+        context.Session.SetString("Rol", user.Rol.ToString());
         return true;
     }
-    public void Logout() { }
+
+    public void Logout()
+    {
+        var context = _httpContextAccesor.HttpContext;
+        if(context == null) throw new InvalidOperationException("HttpContex no esta diponible.");
+
+        context.Session.Clear();
+    }
+
     public bool IsAuthenticated()
     {
-        return true;
+        var context = _httpContextAccesor.HttpContext;
+        if(context == null) throw new InvalidOperationException("HttpContext no esta disponible.");
+
+        return context.Session.GetString("IsAuthenticated") == "true";
     }
+    
     public bool HasAccessLevel(string requiredAccessLevel)
     {
-        return true;
+        var context = _httpContextAccesor.HttpContext;
+        if(context == null) throw new InvalidOperationException("HttpContext no esta disponible.");
+
+        return context.Session.GetString("Rol") == requiredAccessLevel;
     }
 }
