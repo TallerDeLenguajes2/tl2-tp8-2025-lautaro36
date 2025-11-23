@@ -19,12 +19,20 @@ public class AccountController : Controller
     [HttpGet]
     public IActionResult Login()
     {
+        if(_authenticationService.IsAuthenticated())
+        {
+            return RedirectToAction("Index", "Home");
+        }
         return View(new LoginViewModel());
     }
 
     [HttpPost]
     public IActionResult Login(LoginViewModel viewModel)
     {
+        if(_authenticationService.IsAuthenticated())
+        {
+            return RedirectToAction("Index", "Home");
+        }
         if (!ModelState.IsValid)
         {
             return View(viewModel);
