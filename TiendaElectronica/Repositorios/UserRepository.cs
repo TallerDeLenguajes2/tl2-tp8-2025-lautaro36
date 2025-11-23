@@ -20,7 +20,7 @@ public class UserRepository : IUserRepository
         return connection;
     }
 
-    public User? GetUser(string username)
+    public User? GetUser(string? username)
     {
         User? user = null;
 
@@ -34,7 +34,8 @@ public class UserRepository : IUserRepository
         {
             while (reader.Read())
             {
-                user = new User(Convert.ToInt32(reader["IdUsuarios"]), reader["Nombre"].ToString(), reader["Username"].ToString(), reader["Password"].ToString(), reader["PasswordHash"].ToString(), Convert.ToInt32(reader["Rol"]));
+                Enum.TryParse(reader["Rol"].ToString(), out Roles rol);//lo paso primero a string poruqe el tryparse solo recibe strings
+                user = new User(Convert.ToInt32(reader["IdUsuarios"]), reader["Nombre"].ToString(), reader["Username"].ToString(), reader["Password"].ToString(), reader["PasswordHash"].ToString(), rol);
             }
         }
         connection.Close();

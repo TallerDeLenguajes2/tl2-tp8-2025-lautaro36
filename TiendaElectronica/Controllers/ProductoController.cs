@@ -10,13 +10,18 @@ namespace TiendaElectronica.Controllers;
 public class ProductosController : Controller
 {
     private readonly IProductoRepository _productoRepository;
-    public ProductosController(IProductoRepository productoRepository)
+    private readonly IAuthenticationService _authenticationService;
+    public ProductosController(IProductoRepository productoRepository, IAuthenticationService authenticationService)
     {
         _productoRepository = productoRepository;
+        _authenticationService = authenticationService;
     }
 
     public IActionResult Index()
     {
+        IActionResult? securityCheck = CheckPermissions();
+        if(securityCheck != null) return CheckPermissions();
+        
         List<Producto> listadoModels = _productoRepository.GetAll();
         List<ProductoViewModel> listadoViewModels = listadoModels.Select(producto => new ProductoViewModel(producto)).ToList();
         return View(listadoViewModels);
@@ -25,12 +30,18 @@ public class ProductosController : Controller
     [HttpGet]
     public IActionResult Create()
     {
+        IActionResult? securityCheck = CheckPermissions();
+        if(securityCheck != null) return CheckPermissions();
+        
         return View(new ProductoCreateViewModel());
     }
     
     [HttpPost]
     public IActionResult Create(ProductoCreateViewModel viewModel)
     {
+        IActionResult? securityCheck = CheckPermissions();
+        if(securityCheck != null) return CheckPermissions();
+        
         if(!ModelState.IsValid)
         {
             return View(viewModel);
@@ -45,6 +56,9 @@ public class ProductosController : Controller
     [HttpGet("Update/{IdProducto}")] 
     public IActionResult Update(int IdProducto, [FromQuery]string Descripcion, [FromQuery]int Precio)
     {
+        IActionResult? securityCheck = CheckPermissions();
+        if(securityCheck != null) return CheckPermissions();
+        
         ProductoUpdateViewModel ViewModel = new ProductoUpdateViewModel(IdProducto, Descripcion, Precio);
         return View(ViewModel);
     }
@@ -53,6 +67,9 @@ public class ProductosController : Controller
     //como tiene q rearmar el objeto, necesita el id, entonces este tiene q llegar ya sea desde la ruta o desde un campo hidden del form
     public IActionResult Update(ProductoUpdateViewModel ProductoViewModel)
     {
+        IActionResult? securityCheck = CheckPermissions();
+        if(securityCheck != null) return CheckPermissions();
+
         if(!ModelState.IsValid)
         {
             return View(ProductoViewModel);
@@ -71,9 +88,25 @@ public class ProductosController : Controller
     [HttpPost("Delete/{IdProducto}")]//por eso, uso post
     public IActionResult Delete(int IdProducto)
     {
+        IActionResult? securityCheck = CheckPermissions();
+        if(securityCheck != null) return CheckPermissions();
+        
         var borradoCorrecto = _productoRepository.DeleteByID(IdProducto);
         if (borradoCorrecto == -1) return RedirectToAction("Error", "Home");
         else if (borradoCorrecto == 0) return RedirectToAction("Error", "Home");
         return RedirectToAction("Index", "Productos");
+    }
+
+    public IActionResult? CheckPermissions()
+    {
+        if (!_authenticationService.IsAuthenticated())
+        {
+            return RedirectToAction("Login", "Account");
+        }
+        if (!_authenticationService.HasAccessLevel(Roles.Administrador.ToString())){
+            return View("DeniedAccess");
+        }
+        //si retorna null, paso los chequeos
+        return null;
     }
 }

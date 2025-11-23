@@ -9,14 +9,20 @@ public class PresupuestosController : Controller
 {
     private readonly IPresupuestoRepository _presupuestoRepository;
     private readonly IProductoRepository _productoRepository;
-    public PresupuestosController(IPresupuestoRepository presupuestoRepository, IProductoRepository productoRepository) //agrego un productosRepository al constructor porque voy a necesitarlo en algunos metodos y usando DI esta es la forma correcta hacerlo
+    private readonly IAuthenticationService _authenticationService;
+    public PresupuestosController(IPresupuestoRepository presupuestoRepository, IProductoRepository productoRepository, IAuthenticationService authenticationService) //agrego un productosRepository al constructor porque voy a necesitarlo en algunos metodos y usando DI esta es la forma correcta hacerlo
     {
         _presupuestoRepository = presupuestoRepository;
         _productoRepository = productoRepository;
+        _authenticationService = authenticationService;
     }
 
     public IActionResult Index()
     {
+        if (!_authenticationService.IsAuthenticated())
+        {
+            return RedirectToAction("Login", "Account");
+        }
         var listadoModels = _presupuestoRepository.GetAll();
         var listadoViewModels = listadoModels.Select(elementoModel => new PresupuestoViewModel(elementoModel)).ToList();//mapeo cada presupuesto del listado a un listado de presupuesto view model, usando select. paso cada presupuesto individualmente al constructor de PresupuestoIndexViewModels
         return View(listadoViewModels);
@@ -25,6 +31,10 @@ public class PresupuestosController : Controller
     [HttpGet("Details/{id}")]
     public IActionResult Details(int id)
     {
+        if (!_authenticationService.IsAuthenticated())
+        {
+            return RedirectToAction("Login", "Account");
+        }
         var presupuestoModel = _presupuestoRepository.GetDetallesById(id);
         if (presupuestoModel == null) return RedirectToAction("Error", "Home");
         // View("Error") Muestra "error" sin salir de la pagina details.cshtml. Renderiza Views/Shared/Error.cshtml directamente. De esta forma, arroja NullReferenceException en Error.cshtml. AVERIGUAR COMO RESOLVERLO
@@ -37,6 +47,9 @@ public class PresupuestosController : Controller
     [HttpGet]
     public IActionResult Create()
     {
+        IActionResult? securityCheck = CheckPermissions();
+        if(securityCheck != null) return CheckPermissions();
+        
         var ViewModel = new PresupuestoCreateViewModel();
         ViewModel.ListadoProductos = _productoRepository.GetAll();
         return View(ViewModel);
@@ -45,6 +58,9 @@ public class PresupuestosController : Controller
     [HttpPost]
     public IActionResult Create(PresupuestoCreateViewModel ViewModel)
     {
+        IActionResult? securityCheck = CheckPermissions();
+        if(securityCheck != null) return CheckPermissions();
+        
         if (!ModelState.IsValid)
         {
             ViewModel.ListadoProductos = _productoRepository.GetAll();
@@ -63,6 +79,9 @@ public class PresupuestosController : Controller
     [HttpGet("Presupuestos/Update/{IdPresupuesto}")]
     public IActionResult Update(int IdPresupuesto, [FromQuery] string NombreDestinatario, [FromQuery] DateOnly FechaCreacion)
     {
+        IActionResult? securityCheck = CheckPermissions();
+        if(securityCheck != null) return CheckPermissions();
+        
         PresupuestoUpdateViewModel model = new PresupuestoUpdateViewModel(IdPresupuesto, NombreDestinatario, FechaCreacion);
         return View(model);//haciendo q la vista update no reciba un model sino un viewmodel, tp9
     }
@@ -71,6 +90,9 @@ public class PresupuestosController : Controller
     [HttpPost("Presupuestos/Update/{IdPresupuesto}")]
     public IActionResult Update(PresupuestoUpdateViewModel viewModel)
     {
+        IActionResult? securityCheck = CheckPermissions();
+        if(securityCheck != null) return CheckPermissions();
+        
         if (!ModelState.IsValid)
         {
             return View(viewModel);
@@ -83,6 +105,9 @@ public class PresupuestosController : Controller
     [HttpPost("Presupuestos/Delete/{IdPresupuesto}")]
     public IActionResult Delete(int IdPresupuesto)
     {
+        IActionResult? securityCheck = CheckPermissions();
+        if(securityCheck != null) return CheckPermissions();
+        
         int filasAfectadas = _presupuestoRepository.DeleteById(IdPresupuesto);
         if (filasAfectadas == -1) return RedirectToAction("Error", "Home");
         if (filasAfectadas == 0) return RedirectToAction("Error", "Home");
@@ -94,6 +119,9 @@ public class PresupuestosController : Controller
     [HttpGet("UpdateCantidades")]
     public IActionResult UpdateCantidades(int IdPresupuesto, [FromQuery] int IdProducto, [FromQuery] string Descripcion, [FromQuery] int Cantidad)
     {
+        IActionResult? securityCheck = CheckPermissions();
+        if(securityCheck != null) return CheckPermissions();
+        
         DetalleUpCantidadesViewModel detalleViewModel = new DetalleUpCantidadesViewModel(IdPresupuesto, IdProducto, Descripcion, Cantidad);
         return View(detalleViewModel);
     }
@@ -103,6 +131,9 @@ public class PresupuestosController : Controller
     [HttpPost("UpdateCantidades")]
     public IActionResult UpdateCantidades(DetalleUpCantidadesViewModel detalleViewModel)
     {
+        IActionResult? securityCheck = CheckPermissions();
+        if(securityCheck != null) return CheckPermissions();
+        
         if (!ModelState.IsValid)
         {
             return View(detalleViewModel);
@@ -115,6 +146,9 @@ public class PresupuestosController : Controller
     [HttpPost]
     public IActionResult DeleteDetalle(int IdPresupuesto, int IdProducto)
     {
+        IActionResult? securityCheck = CheckPermissions();
+        if(securityCheck != null) return CheckPermissions();
+        
         bool resultado = _presupuestoRepository.DeleteDetalle(IdPresupuesto, IdProducto);
         if (!resultado) return RedirectToAction("Error", "Home");
         return Redirect($"Details/{IdPresupuesto}");
@@ -123,6 +157,9 @@ public class PresupuestosController : Controller
     [HttpGet("CreateDetalle/{IdPresupuesto}")]
     public IActionResult CreateDetalle(int IdPresupuesto)
     {
+        IActionResult? securityCheck = CheckPermissions();
+        if(securityCheck != null) return CheckPermissions();
+        
         List<Producto> listadoModels = _productoRepository.GetAll();
         return View(new DetalleCreateViewModel(IdPresupuesto, listadoModels));
     }
@@ -130,6 +167,9 @@ public class PresupuestosController : Controller
     [HttpPost("CreateDetalle/{IdPresupuesto}")]
     public IActionResult CreateDetalle(DetalleCreateViewModel viewModel)
     {
+        IActionResult? securityCheck = CheckPermissions();
+        if(securityCheck != null) return CheckPermissions();
+        
         if (!ModelState.IsValid)
         {
             viewModel.ListadoProductos = _productoRepository.GetAll();
@@ -139,6 +179,18 @@ public class PresupuestosController : Controller
         if (resultado == -1) return RedirectToAction("Error", "Home");
         else if (resultado == 0) return RedirectToAction("Error", "Home");
         return RedirectToAction("Details", "Presupuestos", new { id = viewModel.IdPresupuesto });//de esta forma me redirige adonde corresponde sin tener q modificar el endpoint q ya esta funcionando
+    }
+    public IActionResult? CheckPermissions()
+    {
+        if (!_authenticationService.IsAuthenticated())
+        {
+            return RedirectToAction("Login", "Account");
+        }
+        if (!_authenticationService.HasAccessLevel(Roles.Administrador.ToString())){
+            return View("DeniedAccess");
+        }
+        //si retorna null, paso los chequeos
+        return null;
     }
 
 }

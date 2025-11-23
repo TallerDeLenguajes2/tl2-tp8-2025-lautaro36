@@ -23,8 +23,8 @@ public class AuthenticationService : IAuthenticationService
         connection.Open();
         return connection;
     }
-    public bool Login(string username, string password)
-    {
+    public bool Login(string? username, string? password)
+    {;
         var context = _httpContextAccesor.HttpContext;
         User? user = _userRepository.GetUser(username);
         if (user == null) return false;
